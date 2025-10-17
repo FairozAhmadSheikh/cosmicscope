@@ -1,0 +1,6 @@
+Flask==2.3.3
+pymongo==4.4.0
+vercel-python-wsgi==0.3.0
+python-dotenv==1.0.0
+bcrypt==4.0.1
+gunicorn==20.1.0
