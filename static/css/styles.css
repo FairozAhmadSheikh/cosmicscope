@@ -1,0 +1,44 @@
+/* Minimal cosmic starter styles */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: linear-gradient(180deg, #02021a 0%, #071033 50%, #0b0420 100%);
+  color: #e6eef8;
+  font-family: Inter, system-ui, Arial, sans-serif;
+}
+.site-header {
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+nav a {
+  color: #bfcfff;
+  margin-right: 16px;
+  text-decoration: none;
+}
+.hero {
+  padding: 80px 32px;
+  text-align: center;
+}
+.auth {
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+}
+.dev-tag {
+  font-weight: 700;
+  color: #ffdd57;
+}
+/* simple starfield */
+#stars {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(#ffffff33 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+}
