@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CosmicScope Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cosmic.css') }}">
+</head>
+<body>
+  <canvas id="stars"></canvas>
+
+  <div class="dashboard">
+    <header>
+      <h1>Welcome, {{ user }}</h1>
+      <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </header>
+
+    <section class="apod-card">
+      <h2>{{ apod.title }}</h2>
+      <p class="date">{{ apod.date }}</p>
+      <img src="{{ apod.url }}" alt="Astronomy Picture" class="apod-image">
+      <p class="explanation">{{ apod.explanation }}</p>
+    </section>
+
+    <footer>Developed by <span>Fairoz Ahmad Sheikh 🚀</span></footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/stars.js') }}"></script>
+</body>
+</html>

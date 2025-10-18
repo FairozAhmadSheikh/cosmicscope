@@ -1,0 +1,27 @@
+* [33ma65b0e8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m made some changes to login and register
+* [33mcd472f1[m dev tag added
+* [33m26f8d74[m fixed pandas arms overlapping of username feild also dev tag
+* [33m63952e9[m changes made
+* [33mf9dd9fb[m routes added
+* [33m7c00b00[m creating nebula sky stars
+* [33m99b40f0[m make responsive and css modified
+* [33mc4f0d10[m changed register page also
+* [33m34bb338[m changing style and way the login page looks
+* [33m9ed81fe[m day one made some changes
+* [33m5ebd63c[m track
+* [33m276e4a1[m css added
+* [33m755b643[m register created
+* [33mfbab7e9[m login page created
+* [33mc40aaf8[m index html
+* [33mcec29fc[m base html completed
+* [33meaf9089[m utils in progress
+* [33m684320a[m adapter entrypoint)
+* [33mdaf1c5b[m Initialize DB helper
+* [33mec8390c[m secret key
+* [33mcfae640[m env loader
+* [33m5ebfda0[m imports made
+* [33mc5d47c3[m setting it ready fror deployment
+* [33m87447d1[m added gitignore contents
+* [33m18c66c3[m requirements added
+* [33m94d9f0d[m making folder structure and required files as dry run planned
+* [33m4c349da[m initializing_project
