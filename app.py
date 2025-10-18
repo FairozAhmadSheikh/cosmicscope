@@ -65,11 +65,28 @@ def dashboard():
     if 'user' not in session:
         return redirect(url_for('login'))
 
-    # Fetch NASA APOD data
-    apod_url = f"https://api.nasa.gov/planetary/apod?api_key={NASA_API_KEY}"
-    data = requests.get(apod_url).json()
+    nasa_api_key = os.getenv("NASA_API_KEY")
+    apod_url = f"https://api.nasa.gov/planetary/apod?api_key={nasa_api_key}"
 
-    return render_template('dashboard.html', apod=data, user=session['user'])
+    try:
+        response = requests.get(apod_url, timeout=10)
+        response.raise_for_status()  # Raises error for bad status codes
+        data = response.json()
+    except requests.exceptions.JSONDecodeError:
+        data = {
+            "title": "NASA API Error",
+            "url": "",
+            "explanation": "Could not decode NASA response. Please check your API key or try again later."
+        }
+    except Exception as e:
+        data = {
+            "title": "Connection Error",
+            "url": "",
+            "explanation": f"An error occurred while connecting to NASA API: {e}"
+        }
+
+    return render_template('dashboard.html', data=data)
+
 
 
 @app.route('/logout')
