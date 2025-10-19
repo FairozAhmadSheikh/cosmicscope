@@ -65,17 +65,45 @@ def dashboard():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    # Fetch last 6 APOD images
-    end_date = datetime.today()
-    start_date = end_date - timedelta(days=5)
-    apod_url = f"https://api.nasa.gov/planetary/apod?api_key={NASA_API_KEY}&start_date={start_date.date()}&end_date={end_date.date()}"
-    try:
-        response = requests.get(apod_url)
-        data = response.json()
-    except:
-        data = []
+    username = session['username']
+    nasa_api_key = os.getenv("NASA_API_KEY")
 
-    return render_template('dashboard.html', data=data, username=session['username'])
+    today = datetime.utcnow().date()
+    start_date = today - timedelta(days=3)
+
+    nasa_url = (
+        f"https://api.nasa.gov/planetary/apod?api_key={nasa_api_key}"
+        f"&start_date={start_date}&end_date={today}"
+    )
+
+    try:
+        response = requests.get(nasa_url, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+
+        # Ensure it's a list
+        if isinstance(data, dict):
+            data = [data]
+
+    except Exception as e:
+        print(f"⚠️ NASA API error: {e}")
+        # Fallback demo data if NASA API fails
+        data = [
+            {
+                "title": "Cosmic Nebula Simulation",
+                "url": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745",
+                "date": str(today),
+                "explanation": "Fallback image — showing due to NASA API timeout.",
+            },
+            {
+                "title": "Galactic Horizon",
+                "url": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
+                "date": str(today - timedelta(days=1)),
+                "explanation": "A breathtaking view of the Milky Way captured in long exposure.",
+            },
+        ]
+
+    return render_template("dashboard.html", username=username, data=data)
 
 @app.route('/get_insight', methods=['POST'])
 def get_insight():
