@@ -105,26 +105,62 @@ def dashboard():
 
     return render_template("dashboard.html", username=username, data=data)
 
+@app.route("/insight", methods=["GET"])
+def insight():
+    try:
+        nasa_api_key = os.getenv("NASA_API_KEY")
+        mars_url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos?api_key={nasa_api_key}"
+        response = requests.get(mars_url, timeout=10)
+
+        if response.status_code == 200:
+            data = response.json()
+            photos = data.get("latest_photos", [])
+            if photos:
+                photo = photos[0]
+                return jsonify({
+                    "photo_url": photo["img_src"],
+                    "camera": photo["camera"]["full_name"],
+                    "rover": photo["rover"]["name"],
+                    "earth_date": photo["earth_date"]
+                })
+            else:
+                return jsonify({"error": "No recent rover data found."}), 404
+        else:
+            return jsonify({"error": "Failed to reach NASA servers."}), response.status_code
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
 @app.route('/get_insight', methods=['POST'])
 def get_insight():
-    img_data = request.json
-    prompt = f"Describe this Astronomy Picture of the Day in an interesting cosmic way:\nTitle: {img_data['title']}\nDate: {img_data['date']}\nDescription: {img_data['explanation']}"
-    
+    img_data = request.get_json()  # safer than request.json
+    prompt = (
+        f"Describe this Astronomy Picture of the Day in an interesting cosmic way:\n"
+        f"Title: {img_data.get('title')}\n"
+        f"Date: {img_data.get('date')}\n"
+        f"Description: {img_data.get('explanation')}"
+    )
+
     try:
-        response = openai.ChatCompletion.create(
+        response = openai.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role":"system", "content":"You are a helpful astronomy assistant."},
-                {"role":"user", "content": prompt}
+                {"role": "system", "content": "You are a helpful astronomy assistant."},
+                {"role": "user", "content": prompt}
             ],
             max_tokens=250,
             temperature=0.8
         )
-        insight = response['choices'][0]['message']['content']
+        # extract the assistant's message
+        insight = response.choices[0].message.content
     except Exception as e:
+        print("OpenAI API error:", e)  # logs the real error in terminal
         insight = "Could not fetch insight at the moment."
-    
+
     return jsonify({"insight": insight})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
