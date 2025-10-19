@@ -1,14 +1,15 @@
-{% extends 'base.html' %} {% block content %}
-<section class="auth">
-  <h2>Register</h2>
-  <form method="POST" action="/register">
-    <label>Username</label>
-    <input name="username" required />
-    <label>Email</label>
-    <input name="email" type="email" required />
-    <label>Password</label>
-    <input name="password" type="password" required />
-    <button type="submit">Create account</button>
+{% extends "layout.html" %} {% block content %}
+<div class="auth-container">
+  <form method="POST">
+    <h2>Register</h2>
+    {% if error %}
+    <p class="error">{{ error }}</p>
+    {% endif %}
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="password" name="password" placeholder="Password" required />
+    <button type="submit">Register</button>
+    <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
   </form>
-</section>
+</div>
 {% endblock %}
