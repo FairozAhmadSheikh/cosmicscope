@@ -1,24 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CosmicScope Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/cosmic.css') }}">
-</head>
-<body>
-    <h1>Welcome, {{ session['user'] }}!</h1>
-    
-    {% if data %}
-        <h2>{{ data.title }}</h2>
-        {% if data.url %}
-            <img src="{{ data.url }}" alt="APOD Image" style="max-width: 100%; height:auto;">
-        {% endif %}
-        <p>{{ data.explanation }}</p>
-    {% else %}
-        <p>No data available.</p>
-    {% endif %}
+{% extends "layout.html" %} {% block content %}
+<div class="dashboard-container">
+  <h1>Welcome, {{ username }} 🌌</h1>
+  <div class="gallery">
+    {% for item in data %}
+    <div
+      class="card"
+      data-title="{{ item.title }}"
+      data-date="{{ item.date }}"
+      data-explanation="{{ item.explanation }}"
+    >
+      <img src="{{ item.url }}" alt="{{ item.title }}" />
+      <div class="card-info">
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.date }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
-    <a href="{{ url_for('logout') }}">Logout</a>
-</body>
-</html>
+<!-- Modal -->
+<div class="modal" id="insight-modal">
+  <span class="close">&times;</span>
+  <img id="modal-img" src="" alt="" />
+  <div class="modal-info">
+    <h2 id="modal-title"></h2>
+    <p id="modal-date"></p>
+    <p id="modal-insight">Loading insight...</p>
+  </div>
+</div>
+
+<footer class="dev-tag">👨‍🚀 Crafted by Fairoz Ahmad Sheikh</footer>
+{% endblock %}
