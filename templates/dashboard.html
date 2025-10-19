@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CosmicScope Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cosmic.css') }}">
+</head>
+<body>
+    <h1>Welcome, {{ session['user'] }}!</h1>
+    
+    {% if data %}
+        <h2>{{ data.title }}</h2>
+        {% if data.url %}
+            <img src="{{ data.url }}" alt="APOD Image" style="max-width: 100%; height:auto;">
+        {% endif %}
+        <p>{{ data.explanation }}</p>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>
