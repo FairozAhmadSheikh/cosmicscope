@@ -18,9 +18,11 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
 # MongoDB Setup
-client = MongoClient("mongodb://localhost:27017/")
-db = client.cosmicscope
+MONGO_URI = os.getenv("MONGO_URI")
+client = MongoClient(MONGO_URI)
+db = client.get_database()  # 
 users = db.users
+
 
 # Routes
 @app.route('/')
