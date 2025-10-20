@@ -1,18 +1,17 @@
-{% extends "layout.html" %}
-{% block content %}
+{% extends "layout.html" %} {% block content %}
 <div class="explore-container">
   <h1>Mars Rover Exploration 🚀</h1>
   <div class="gallery">
-    {% for photo in photos %}
+    {% for photo in data %}
     <div class="card">
-      <img src="{{ photo.img_src }}" alt="Mars Photo" loading="lazy" />
+      <img src="{{ photo.img_src }}" alt="Mars Rover Image" />
       <div class="card-info">
         <h3>{{ photo.camera.full_name }}</h3>
-        <p>Rover: {{ photo.rover.name }}</p>
-        <p>Date: {{ photo.earth_date }}</p>
+        <p>{{ photo.earth_date }}</p>
       </div>
     </div>
     {% endfor %}
   </div>
 </div>
+<footer class="dev-tag">👨‍🚀 Crafted by Fairoz Ahmad Sheikh</footer>
 {% endblock %}
