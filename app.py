@@ -158,15 +158,19 @@ def get_insight():
 
 @app.route('/explore')
 def explore():
-    api_key = os.getenv("NASA_API_KEY")
-    mars_url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key={api_key}"
     try:
-        response = requests.get(mars_url, timeout=10)
-        data = response.json().get('photos', [])[:12]
+        nasa_url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
+        params = {
+            "sol": 1000,
+            "api_key": os.getenv("NASA_API_KEY") or "DEMO_KEY"
+        }
+        response = requests.get(nasa_url, params=params)
+        data = response.json().get("photos", [])[:8]  # show 8 photos max
     except Exception as e:
         print("Error fetching Mars data:", e)
         data = []
-    return render_template('explore.html', photos=data)
+    return render_template('explore.html', data=data)
+
 
 @app.route('/logout')
 def logout():
