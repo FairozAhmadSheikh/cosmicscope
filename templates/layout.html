@@ -4,13 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CosmicScope</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/cosmic.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cosmic.css') }}" />
   </head>
   <body>
+    <nav class="navbar">
+      <h2 class="logo">☄️ CosmicScope</h2>
+      <ul>
+        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('explore') }}">Explore</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+    </nav>
+
     {% block content %}{% endblock %}
+
+    <footer class="dev-tag">👨‍🚀 Crafted by Fairoz Ahmad Sheikh</footer>
     <script src="{{ url_for('static', filename='js/effects.js') }}"></script>
   </body>
 </html>
