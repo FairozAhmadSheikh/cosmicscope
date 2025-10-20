@@ -161,6 +161,18 @@ def get_insight():
 
     return jsonify({"insight": insight})
 
+@app.route('/explore')
+def explore():
+    api_key = os.getenv("NASA_API_KEY")
+    mars_url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key={api_key}"
+    try:
+        response = requests.get(mars_url, timeout=10)
+        data = response.json().get('photos', [])[:12]
+    except Exception as e:
+        print("Error fetching Mars data:", e)
+        data = []
+    return render_template('explore.html', photos=data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
