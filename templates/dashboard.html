@@ -1,34 +1,71 @@
-{% extends "layout.html" %} {% block content %}
+{% extends "layout.html" %}
+{% block content %}
 <div class="dashboard-container">
   <h1>Welcome, {{ username }} 🌌</h1>
-  <div class="gallery">
-    {% for item in data %}
-    <div
-      class="card"
-      data-title="{{ item.title }}"
-      data-date="{{ item.date }}"
-      data-explanation="{{ item.explanation }}"
-    >
-      <img src="{{ item.url }}" alt="{{ item.title }}" />
-      <div class="card-info">
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.date }}</p>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
 
-<!-- Modal -->
-<div class="modal" id="insight-modal">
-  <span class="close">&times;</span>
-  <img id="modal-img" src="" alt="" />
-  <div class="modal-info">
-    <h2 id="modal-title"></h2>
-    <p id="modal-date"></p>
-    <p id="modal-insight">Loading insight...</p>
+  <div class="explore-controls">
+    <select id="explore-select">
+      <option value="apod">Astronomy Picture of the Day</option>
+      <option value="mars">Mars Rover Exploration</option>
+      <option value="earth">Earth Imagery</option>
+      <option value="iss">ISS Live Tracker</option>
+    </select>
+    <button id="explore-btn">Explore 🚀</button>
+  </div>
+
+  <div id="explore-result" class="explore-result">
+    <h2 class="placeholder">🌠 Choose an option to explore the universe</h2>
   </div>
 </div>
 
 <footer class="dev-tag">👨‍🚀 Crafted by Fairoz Ahmad Sheikh</footer>
+
+<script>
+document.getElementById('explore-btn').addEventListener('click', async () => {
+  const type = document.getElementById('explore-select').value;
+  const result = document.getElementById('explore-result');
+  result.innerHTML = '<div class="loader"></div>';
+
+  const resp = await fetch(`/explore/${type}`);
+  const data = await resp.json();
+
+  if (data.error) {
+    result.innerHTML = `<p class='error'>${data.error}</p>`;
+    return;
+  }
+
+  if (type === 'apod') {
+    result.innerHTML = `
+      <div class="apod-card">
+        <h2>${data.title}</h2>
+        <img src="${data.url}" alt="${data.title}">
+        <p>${data.explanation}</p>
+      </div>`;
+  } else if (type === 'mars') {
+    result.innerHTML = `
+      <h2>Mars Rover Photos</h2>
+      <div class="gallery">
+        ${data.photos.slice(0, 6).map(p => `
+          <div class="card">
+            <img src="${p.img_src}" alt="${p.camera.full_name}">
+            <p>${p.camera.full_name}</p>
+            <p>${p.earth_date}</p>
+          </div>`).join('')}
+      </div>`;
+  } else if (type === 'earth') {
+    result.innerHTML = `
+      <h2>Earth from Space 🌍</h2>
+      <img src="${data.image}" alt="Earth View">
+      <p>Lat: ${data.lat}, Lon: ${data.lon}</p>`;
+  } else if (type === 'iss') {
+    result.innerHTML = `
+      <h2>ISS Current Location 🛰️</h2>
+      <p>Latitude: ${data.latitude}</p>
+      <p>Longitude: ${data.longitude}</p>
+      <iframe width="100%" height="400" frameborder="0" scrolling="no"
+        src="https://maps.google.com/maps?q=${data.latitude},${data.longitude}&z=4&output=embed">
+      </iframe>`;
+  }
+});
+</script>
 {% endblock %}
