@@ -129,42 +129,58 @@ def insight():
 
 @app.route("/explore/<option>")
 def explore_api(option):
-    nasa_key = os.getenv("NASA_API_KEY")
-    if option == "apod":
-        res = requests.get(f"https://api.nasa.gov/planetary/apod?api_key={nasa_key}")
-        print("Response status:", res.status_code)
-        print("Response text:", res.text[:500])  # print first 500 chars
+    import requests
+    from flask import jsonify
+    from datetime import datetime, timedelta
+    import os
 
-        return jsonify(res.json())
+    NASA_API_KEY = os.getenv("NASA_API_KEY")
 
-    elif option == "mars":
-        res = requests.get(f"https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key={nasa_key}")
-        print("Response status:", res.status_code)
-        print("Response text:", res.text[:500])  # print first 500 chars
+    # Default response structure
+    data = {"status": "error", "message": "Invalid option", "items": []}
 
-        return jsonify(res.json())
+    try:
+        if option == "apod":
+            # Get 5 recent astronomy pictures
+            end_date = datetime.today().date()
+            start_date = end_date - timedelta(days=5)
+            url = f"https://api.nasa.gov/planetary/apod?api_key={NASA_API_KEY}&start_date={start_date}&end_date={end_date}"
+            res = requests.get(url, timeout=10)
 
-    elif option == "earth":
-        lat, lon = random.uniform(-60, 60), random.uniform(-180, 180)
-        url = f"https://api.nasa.gov/planetary/earth/imagery?lon={lon}&lat={lat}&dim=0.15&api_key={nasa_key}"
-        print("Response status:", res.status_code)
-        print("Response text:", res.text[:500])  # print first 500 chars
+            print("NASA API Status:", res.status_code)
 
-        return jsonify({"image": url, "lat": lat, "lon": lon})
+            if res.status_code == 200:
+                try:
+                    items = res.json()
+                    if isinstance(items, dict):  # sometimes returns a single object
+                        items = [items]
+                    data = {"status": "success", "items": items}
+                except ValueError:
+                    print("NASA API returned non-JSON:", res.text[:300])
+                    data = {"status": "error", "message": "Invalid JSON from NASA"}
+            else:
+                data = {
+                    "status": "error",
+                    "message": f"NASA API failed ({res.status_code})",
+                }
 
-    elif option == "iss":
-        res = requests.get("http://api.open-notify.org/iss-now.json").json()
-        pos = res["iss_position"]
-        print("Response status:", res.status_code)
-        print("Response text:", res.text[:500])  # print first 500 chars
+        elif option == "mars":
+            url = f"https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key={NASA_API_KEY}"
+            res = requests.get(url, timeout=10)
+            if res.status_code == 200:
+                photos = res.json().get("photos", [])
+                data = {"status": "success", "items": photos[:10]}
+            else:
+                data = {
+                    "status": "error",
+                    "message": f"Mars API failed ({res.status_code})",
+                }
 
-        return jsonify({"latitude": pos["latitude"], "longitude": pos["longitude"]})
+    except requests.exceptions.RequestException as e:
+        data = {"status": "error", "message": str(e)}
 
-    else:
-        print("Response status:", res.status_code)
-        print("Response text:", res.text[:500])  # print first 500 chars
+    return jsonify(data)
 
-        return jsonify({"error": "Invalid option"})
 
 
 @app.route('/get_insight', methods=['POST'])
