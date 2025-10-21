@@ -303,3 +303,44 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+.explore-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.explore-controls select, .explore-controls button {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+}
+
+.explore-controls button:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.explore-result img {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.2);
+}
+
+.loader {
+  border: 6px solid rgba(255,255,255,0.2);
+  border-top: 6px solid #00ffff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  margin: 50px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
