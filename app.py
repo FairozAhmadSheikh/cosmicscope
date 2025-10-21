@@ -128,28 +128,44 @@ def insight():
         return jsonify({"error": str(e)}), 500
 
 @app.route("/explore/<option>")
-def explore(option):
+def explore_api(option):
     nasa_key = os.getenv("NASA_API_KEY")
     if option == "apod":
         res = requests.get(f"https://api.nasa.gov/planetary/apod?api_key={nasa_key}")
+        print("Response status:", res.status_code)
+        print("Response text:", res.text[:500])  # print first 500 chars
+
         return jsonify(res.json())
 
     elif option == "mars":
         res = requests.get(f"https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key={nasa_key}")
+        print("Response status:", res.status_code)
+        print("Response text:", res.text[:500])  # print first 500 chars
+
         return jsonify(res.json())
 
     elif option == "earth":
         lat, lon = random.uniform(-60, 60), random.uniform(-180, 180)
         url = f"https://api.nasa.gov/planetary/earth/imagery?lon={lon}&lat={lat}&dim=0.15&api_key={nasa_key}"
+        print("Response status:", res.status_code)
+        print("Response text:", res.text[:500])  # print first 500 chars
+
         return jsonify({"image": url, "lat": lat, "lon": lon})
 
     elif option == "iss":
         res = requests.get("http://api.open-notify.org/iss-now.json").json()
         pos = res["iss_position"]
+        print("Response status:", res.status_code)
+        print("Response text:", res.text[:500])  # print first 500 chars
+
         return jsonify({"latitude": pos["latitude"], "longitude": pos["longitude"]})
 
     else:
+        print("Response status:", res.status_code)
+        print("Response text:", res.text[:500])  # print first 500 chars
+
         return jsonify({"error": "Invalid option"})
+
 
 @app.route('/get_insight', methods=['POST'])
 def get_insight():
